@@ -6,8 +6,8 @@ const iconPrefix = Platform.OS === "ios" ? "ios" : "md";
 
 const styles = StyleSheet.create({
   btnRight: {
-    marginRight: 10
-  }
+    marginRight: 10,
+  },
 });
 
 export const AddButton = ({ navigation }) => (

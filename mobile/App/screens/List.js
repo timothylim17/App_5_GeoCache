@@ -2,11 +2,43 @@ import React from "react";
 import { ActivityIndicator } from "react-native";
 
 import { List, ListItem } from "../components/List";
+import { geoFetch } from "../util/api";
 
 class ListScreen extends React.Component {
   state = {
     loading: true,
-    list: []
+    list: [],
+    refreshing: false,
+  };
+
+  componentDidMount() {
+    this.getGeoFetch();
+  }
+
+  getGeoFetch = () => {
+    geoFetch("/geocache/list")
+      .then((response) => {
+        this.setState({
+          loading: false,
+          list: response.result,
+          refreshing: false,
+        });
+      })
+      .catch((error) => {
+        console.log("list error:", error);
+      });
+  };
+
+  handleRefresh = () => {
+    const { list } = this.state;
+    this.setState(
+      {
+        refreshing: true,
+      },
+      () => {
+        this.getGeoFetch();
+      }
+    );
   };
 
   render() {
@@ -24,6 +56,8 @@ class ListScreen extends React.Component {
             onPress={() => this.props.navigation.navigate("Details", { item })}
           />
         )}
+        refreshing={this.state.refreshing}
+        onRefresh={this.handleRefresh}
       />
     );
   }
